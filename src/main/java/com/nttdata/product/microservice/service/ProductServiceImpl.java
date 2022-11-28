@@ -1,0 +1,58 @@
+package com.nttdata.product.microservice.service;
+
+import com.nttdata.product.microservice.model.Product;
+import com.nttdata.product.microservice.mapper.ProductMapper;
+import com.nttdata.product.microservice.repository.ProductRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
+@Slf4j
+@Service
+@Transactional
+public class ProductServiceImpl implements ProductService {
+    @Autowired
+    private ProductRepository repository;
+    @Autowired
+    private ProductMapper mapper;
+
+    public Mono<Product> save(Mono<Product> product) {
+        return product.map(c -> {
+                    if (c.getType() == Product.TypeEnum.PASIVOS)
+                        c.setCredit(null);
+                    else if (c.getType() == Product.TypeEnum.ACTIVOS) {
+                        c.setMaintenance(null);
+                        c.setMovement(null);
+                    }
+                    return c;
+                })
+                .map(mapper::toDocument)
+                .flatMap(repository::save)
+                .map(mapper::toModel);
+    }
+
+    public Mono<Void> deleteById(String id) {
+        return findById(id)
+                .map(mapper::toDocument)
+                .flatMap(repository::delete);
+    }
+
+    public Mono<Product> findById(String id) {
+        return repository.findById(id)
+                .map(mapper::toModel);
+    }
+
+    public Flux<Product> findAll() {
+        return repository.findAll()
+                .map(mapper::toModel);
+    }
+
+    public Mono<Product> update(Mono<Product> product, String id) {
+        return save(findById(id)
+                .flatMap(c -> product)
+                .doOnNext(e -> e.setId(id)));
+    }
+}
