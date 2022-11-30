@@ -1,5 +1,6 @@
 package com.nttdata.product.microservice.service;
 
+import com.nttdata.product.microservice.exception.InvalidDataException;
 import com.nttdata.product.microservice.model.Product;
 import com.nttdata.product.microservice.mapper.ProductMapper;
 import com.nttdata.product.microservice.repository.ProductRepository;
@@ -20,18 +21,24 @@ public class ProductServiceImpl implements ProductService {
     private ProductMapper mapper;
 
     public Mono<Product> save(Mono<Product> product) {
-        return product.map(c -> {
-                    if (c.getType() == Product.TypeEnum.PASIVOS)
-                        c.setCredit(null);
-                    else if (c.getType() == Product.TypeEnum.ACTIVOS) {
-                        c.setMaintenance(null);
-                        c.setMovement(null);
-                    }
-                    return c;
-                })
+        return product.map(this::validation)
                 .map(mapper::toDocument)
                 .flatMap(repository::save)
                 .map(mapper::toModel);
+    }
+
+    private Product validation(Product c) {
+        if (c.getType() == Product.TypeEnum.PASIVOS){
+            c.setCredit(null);
+            if (c.getAccount() == null)
+                throw new InvalidDataException("Account must not be null");
+        }
+        else if (c.getType() == Product.TypeEnum.ACTIVOS) {
+            c.setAccount(null);
+            if (c.getCredit() == null)
+                throw new InvalidDataException("Credit must not be null");
+        }
+        return c;
     }
 
     public Mono<Void> deleteById(String id) {

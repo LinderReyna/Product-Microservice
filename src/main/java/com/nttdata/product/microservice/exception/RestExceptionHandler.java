@@ -40,6 +40,12 @@ public class RestExceptionHandler {
         return buildResponseEntity(httpStatus, new RuntimeException("Invalid Argument Type"));
     }
 
+    @ExceptionHandler
+    protected ResponseEntity<ErrorResponse> handleException(InvalidDataException exc) {
+        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+        return buildResponseEntity(httpStatus, exc);
+    }
+
     private ResponseEntity<ErrorResponse> buildResponseEntity(HttpStatus httpStatus, Exception exc) {
         return buildResponseEntity(httpStatus, exc, null);
     }

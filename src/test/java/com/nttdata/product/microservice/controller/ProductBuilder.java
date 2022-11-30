@@ -11,8 +11,6 @@ public class ProductBuilder {
         dto.setType(Product.TypeEnum.PASIVOS);
         dto.setName("Ahorro");
         dto.setDescription("cuentas bancarias");
-        dto.setMaintenance(BigDecimal.TEN);
-        dto.setMovement(10);
         return dto;
     }
 }

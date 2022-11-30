@@ -127,9 +127,45 @@ paths:
           description: Invalid Product value
 components:
   schemas:
+    Account:
+      type: object
+      properties:
+        maintenance:
+          type: number
+          format: currency
+          description: maintenance fee
+          example: 10.00
+        movement:
+          type: integer
+          description: maximum limit of monthly movements
+          format: int32
+          example: 10
+        fixedDay:
+          type: array
+          items:
+            type: integer
+            description: specific day for a movement
+            format: int32
+            minimum: 1
+            example: 1
+    Credit:
+      required:
+        - creditCard
+      type: object
+      properties:
+        creditCard:
+          type: string
+          description: credit card
+          example: Clasica
+        membership:
+          type: number
+          format: currency
+          description: membership
+          example: 100.00
     Product:
       required:
         - type
+        - currency
         - name
         - description
       type: object
@@ -143,6 +179,12 @@ components:
           enum:
             - Pasivos
             - Activos
+        currency:
+          type: string
+          description: Currency
+          enum:
+            - PEN
+            - USD
         name:
           type: string
           description: Name
@@ -151,26 +193,21 @@ components:
           type: string
           description: Description
           example: cuentas bancarias
-        maintenance:
-          type: number
-          format: currency
-          description: maintenance fee
-          example: 10.00
-        movement:
-          type: integer
-          description: maximum limit of monthly movements
-          format: int32
-          example: 10
+        account:
+          $ref: '#/components/schemas/Account'
         credit:
-          type: number
-          format: currency
-          description: credit
-          example: 0.00
+          $ref: '#/components/schemas/Credit'
         createdAt:
           type: string
           format: date-time
           description: Creation date
-          example: "2022-10-27T20:30:00Z"
+          example: "2022-11-30T20:30:00Z"
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          description: Updated date
+          example: "2022-11-30T20:30:00Z"
           readOnly: true
   requestBodies:
     product:
