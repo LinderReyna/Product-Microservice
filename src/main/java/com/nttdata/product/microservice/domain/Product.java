@@ -4,7 +4,6 @@ import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.OffsetDateTime;
@@ -16,10 +15,8 @@ public class Product {
     private String id;
     private String type;
     private String currency;
-    @Indexed(unique = true)
-    private String name;
     private String description;
-    private Account account;
+    private BankAccount bankAccount;
     private Credit credit;
     @CreatedDate
     private OffsetDateTime createdAt;

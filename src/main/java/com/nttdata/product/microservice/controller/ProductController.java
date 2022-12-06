@@ -13,6 +13,8 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+
 @RequestMapping("/api/microservice/1.0.0")
 @RestController
 @Slf4j
@@ -31,6 +33,12 @@ public class ProductController implements ProductApi {
     @Override
     public Mono<ResponseEntity<Flux<Product>>> findAll(ServerWebExchange exchange) {
         return Mono.just(service.findAll())
+                .map(ResponseEntity::ok);
+    }
+
+    @Override
+    public Mono<ResponseEntity<Flux<Product>>> findAllByName(List<String> name, ServerWebExchange exchange) {
+        return Mono.just(service.findAllByAccount_Name(name))
                 .map(ResponseEntity::ok);
     }
 

@@ -1,8 +1,8 @@
 package com.nttdata.product.microservice.service;
 
 import com.nttdata.product.microservice.exception.InvalidDataException;
-import com.nttdata.product.microservice.model.Product;
 import com.nttdata.product.microservice.mapper.ProductMapper;
+import com.nttdata.product.microservice.model.Product;
 import com.nttdata.product.microservice.repository.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -30,11 +33,11 @@ public class ProductServiceImpl implements ProductService {
     private Product validation(Product c) {
         if (c.getType() == Product.TypeEnum.PASIVOS){
             c.setCredit(null);
-            if (c.getAccount() == null)
+            if (c.getBankAccount() == null)
                 throw new InvalidDataException("Account must not be null");
         }
         else if (c.getType() == Product.TypeEnum.ACTIVOS) {
-            c.setAccount(null);
+            c.setBankAccount(null);
             if (c.getCredit() == null)
                 throw new InvalidDataException("Credit must not be null");
         }
@@ -61,5 +64,11 @@ public class ProductServiceImpl implements ProductService {
         return save(findById(id)
                 .flatMap(c -> product)
                 .doOnNext(e -> e.setId(id)));
+    }
+
+    @Override
+    public Flux<Product> findAllByAccount_Name(Collection<String> account_names) {
+        return repository.findAllByBankAccount_NameIn(account_names.stream().map(String::toUpperCase).collect(Collectors.toList()))
+                .map(mapper::toModel);
     }
 }
