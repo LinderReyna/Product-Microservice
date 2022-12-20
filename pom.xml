@@ -129,6 +129,12 @@
 							<packageName>com.nttdata.product.microservice</packageName>
 							<apiPackage>com.nttdata.product.microservice.api</apiPackage>
 							<modelPackage>com.nttdata.product.microservice.model</modelPackage>
+							<typeMappings>
+								<typeMapping>OffsetDateTime=Instant</typeMapping>
+							</typeMappings>
+							<importMappings>
+								<importMapping>java.time.OffsetDateTime=java.time.Instant</importMapping>
+							</importMappings>
 						</configuration>
 					</execution>
 				</executions>

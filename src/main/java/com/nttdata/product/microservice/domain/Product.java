@@ -6,7 +6,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.OffsetDateTime;
+import java.time.Instant;
 
 @Data
 @Document
@@ -19,7 +19,7 @@ public class Product {
     private BankAccount bankAccount;
     private Credit credit;
     @CreatedDate
-    private OffsetDateTime createdAt;
+    private Instant createdAt;
     @LastModifiedDate
-    private OffsetDateTime updatedAt;
+    private Instant updatedAt;
 }

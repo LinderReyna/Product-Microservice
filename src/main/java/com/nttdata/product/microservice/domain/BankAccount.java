@@ -11,6 +11,8 @@ public class BankAccount {
     @Indexed(unique = true)
     private String name;
     private BigDecimal maintenance;
+    private BigDecimal transactionFee;
     private Integer movement;
+    private Integer freeTransaction;
     private List<Integer> fixedDay;
 }

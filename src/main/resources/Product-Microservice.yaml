@@ -172,11 +172,21 @@ components:
           format: currency
           description: maintenance fee
           example: 10.00
+        transactionFee:
+          type: number
+          format: currency
+          description: transaction fee
+          example: 3.00
         movement:
           type: integer
           description: maximum limit of monthly movements
           format: int32
           example: 10
+        freeTransaction:
+          type: integer
+          description: Free Transaction
+          format: int32
+          example: 5
         fixedDay:
           type: array
           items:
