@@ -195,7 +195,7 @@ components:
             format: int32
             minimum: 1
             example: 1
-    Credit:
+    BankCredit:
       required:
         - creditCard
       type: object
@@ -204,11 +204,12 @@ components:
           type: string
           description: credit card
           example: Clasica
-        membership:
-          type: number
-          format: currency
-          description: membership
-          example: 100.00
+        numberOfCredits:
+          type: integer
+          description: Number Of Credits
+          format: int32
+          minimum: 1
+          example: 1
     Product:
       required:
         - type
@@ -238,8 +239,8 @@ components:
           example: cuentas bancarias
         bankAccount:
           $ref: '#/components/schemas/BankAccount'
-        credit:
-          $ref: '#/components/schemas/Credit'
+        bankCredit:
+          $ref: '#/components/schemas/BankCredit'
         createdAt:
           type: string
           format: date-time

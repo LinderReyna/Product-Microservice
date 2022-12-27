@@ -32,13 +32,13 @@ public class ProductServiceImpl implements ProductService {
 
     private Product validation(Product c) {
         if (c.getType() == Product.TypeEnum.PASIVOS){
-            c.setCredit(null);
+            c.setBankCredit(null);
             if (c.getBankAccount() == null)
                 throw new InvalidDataException("Account must not be null");
         }
         else if (c.getType() == Product.TypeEnum.ACTIVOS) {
             c.setBankAccount(null);
-            if (c.getCredit() == null)
+            if (c.getBankCredit() == null)
                 throw new InvalidDataException("Credit must not be null");
         }
         return c;
@@ -62,7 +62,7 @@ public class ProductServiceImpl implements ProductService {
 
     public Mono<Product> update(Mono<Product> product, String id) {
         return save(findById(id)
-                .flatMap(c -> product)
+                .flatMap(c -> product.doOnNext(x -> x.setCreatedAt(c.getCreatedAt())))
                 .doOnNext(e -> e.setId(id)));
     }
 

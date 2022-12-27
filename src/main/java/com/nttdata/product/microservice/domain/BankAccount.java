@@ -8,7 +8,7 @@ import java.util.List;
 
 @Data
 public class BankAccount {
-    @Indexed(unique = true)
+    @Indexed(unique = true, sparse = true)
     private String name;
     private BigDecimal maintenance;
     private BigDecimal transactionFee;

@@ -17,7 +17,7 @@ public class Product {
     private String currency;
     private String description;
     private BankAccount bankAccount;
-    private Credit credit;
+    private BankCredit bankCredit;
     @CreatedDate
     private Instant createdAt;
     @LastModifiedDate
