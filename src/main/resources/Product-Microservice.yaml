@@ -188,22 +188,23 @@ components:
           format: int32
           example: 5
         fixedDay:
-          type: array
-          items:
-            type: integer
-            description: specific day for a movement
-            format: int32
-            minimum: 1
-            example: 1
+          type: integer
+          description: specific day for a movement
+          format: int32
+          minimum: 1
+          example: 1
     BankCredit:
       required:
         - creditCard
+        - numberOfCredits
       type: object
       properties:
         creditCard:
           type: string
           description: credit card
-          example: Clasica
+          enum:
+            - Personal
+            - Empresarial
         numberOfCredits:
           type: integer
           description: Number Of Credits

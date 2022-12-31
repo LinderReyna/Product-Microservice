@@ -1,12 +1,13 @@
 package com.nttdata.product.microservice.domain;
 
+import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.mongodb.core.index.Indexed;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 @Data
+@Builder
 public class BankAccount {
     @Indexed(unique = true, sparse = true)
     private String name;
@@ -14,5 +15,5 @@ public class BankAccount {
     private BigDecimal transactionFee;
     private Integer movement;
     private Integer freeTransaction;
-    private List<Integer> fixedDay;
+    private Integer fixedDay;
 }
