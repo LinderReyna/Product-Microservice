@@ -6,6 +6,8 @@ import com.nttdata.product.microservice.model.Product;
 import com.nttdata.product.microservice.repository.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
@@ -22,6 +24,9 @@ public class ProductServiceImpl implements ProductService {
     private ProductRepository repository;
     @Autowired
     private ProductMapper mapper;
+
+    @Autowired
+    private ReactiveRedisTemplate<String, Product> reactiveRedisTemplate;
 
     public Mono<Product> save(Mono<Product> product) {
         return product.map(this::validation)
@@ -51,8 +56,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public Mono<Product> findById(String id) {
-        return repository.findById(id)
-                .map(mapper::toModel);
+        return reactiveRedisTemplate.opsForValue().get(id)
+                .switchIfEmpty(repository.findById(id)
+                        .map(mapper::toModelWithoutDate)
+                        .doOnSubscribe(s -> log.info("Getting Product with ID {}", id))
+                        .flatMap(p -> reactiveRedisTemplate.opsForValue().set(id, p).thenReturn(p))
+                );
     }
 
     public Flux<Product> findAll() {
