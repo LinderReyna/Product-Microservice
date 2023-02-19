@@ -233,7 +233,6 @@ components:
           description: Currency
           enum:
             - PEN
-            - USD
         description:
           type: string
           description: Description
